@@ -1,27 +1,59 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import { useState, useEffect } from 'react';
 
-const queryClient = new QueryClient();
+export default function App() {
+  // Estado: lista de despesas
+  const [despesas, setDespesas] = useState(() => {
+    const salvas = localStorage.getItem('despesas');
+    return salvas ? JSON.parse(salvas) : [];
+  });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  // Estados para os campos de entrada
+  const [descricao, setDescricao] = useState('');
+  const [valor, setValor] = useState('');
 
-export default App;
+  // Sempre que mudar, salva no localStorage
+  useEffect(() => {
+    localStorage.setItem('despesas', JSON.stringify(despesas));
+  }, [despesas]);
+
+  // Função para adicionar nova despesa
+  const adicionarDespesa = () => {
+    if (descricao && valor) {
+      setDespesas([...despesas, { descricao, valor }]);
+      setDescricao('');
+      setValor('');
+    }
+  };
+
+  return (
+    <main style={{ padding: '2rem' }}>
+      <h1>Gastos Organizados e Simples</h1>
+
+      <input
+        placeholder="Descrição"
+        value={descricao}
+        onChange={(e) => setDescricao(e.target.value)}
+        style={{ marginRight: '0.5rem' }}
+      />
+
+      <input
+        type="number"
+        placeholder="Valor"
+        value={valor}
+        onChange={(e) => setValor(e.target.value)}
+        style={{ marginRight: '0.5rem' }}
+      />
+
+      <button onClick={adicionarDespesa}>Adicionar</button>
+
+      <h2>Minhas Despesas:</h2>
+      <ul>
+        {despesas.map((d, i) => (
+          <li key={i}>
+            {d.descricao}: R$ {d.valor}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
