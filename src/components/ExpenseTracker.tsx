@@ -2,14 +2,18 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, PlusCircle, Table } from 'lucide-react';
+import { Calculator, PlusCircle, Table, BarChart3 } from 'lucide-react';
 import TransactionForm from './TransactionForm';
 import TransactionTable from './TransactionTable';
+import BudgetManager from './BudgetManager';
+import BudgetSummary from './BudgetSummary';
 import { Transaction } from '@/types/transaction';
 import { formatCurrency } from '@/utils/categorizationUtils';
 
 const ExpenseTracker = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [monthlyBudget, setMonthlyBudget] = useState(2000);
+  const [dailyBudget, setDailyBudget] = useState(100);
 
   const addTransaction = (transaction: Transaction) => {
     setTransactions(prev => [...prev, transaction]);
@@ -23,6 +27,11 @@ const ExpenseTracker = () => {
     setTransactions(prev => 
       prev.map(t => t.id === updatedTransaction.id ? updatedTransaction : t)
     );
+  };
+
+  const updateBudgets = (monthly: number, daily: number) => {
+    setMonthlyBudget(monthly);
+    setDailyBudget(daily);
   };
 
   const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
@@ -39,7 +48,7 @@ const ExpenseTracker = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -75,10 +84,24 @@ const ExpenseTracker = () => {
             </div>
           </CardContent>
         </Card>
+
+        <BudgetManager
+          monthlyBudget={monthlyBudget}
+          dailyBudget={dailyBudget}
+          onUpdateBudgets={updateBudgets}
+        />
+      </div>
+
+      <div className="mb-8">
+        <BudgetSummary
+          transactions={transactions}
+          monthlyBudget={monthlyBudget}
+          dailyBudget={dailyBudget}
+        />
       </div>
 
       <Tabs defaultValue="add" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6">
+        <TabsList className="grid w-full grid-cols-3 mb-6">
           <TabsTrigger value="add" className="flex items-center gap-2">
             <PlusCircle className="h-4 w-4" />
             Adicionar Transação
@@ -86,6 +109,10 @@ const ExpenseTracker = () => {
           <TabsTrigger value="view" className="flex items-center gap-2">
             <Table className="h-4 w-4" />
             Ver Transações
+          </TabsTrigger>
+          <TabsTrigger value="budget" className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            Resumo Orçamento
           </TabsTrigger>
         </TabsList>
 
@@ -110,6 +137,21 @@ const ExpenseTracker = () => {
                 transactions={transactions} 
                 onRemoveTransaction={removeTransaction}
                 onEditTransaction={editTransaction}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="budget">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Resumo do Orçamento</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <BudgetSummary
+                transactions={transactions}
+                monthlyBudget={monthlyBudget}
+                dailyBudget={dailyBudget}
               />
             </CardContent>
           </Card>
