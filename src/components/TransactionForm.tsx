@@ -61,6 +61,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
     }
   };
 
+  const handleCategoryChange = (value: string) => {
+    setCategory(value as TransactionCategory);
+  };
+
   const predictedCategory = description ? categorizeTransaction(description) : null;
 
   return (
@@ -127,7 +131,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
         {!autoCategorizationEnabled && (
           <div className="space-y-2">
             <Label htmlFor="category">Categoria Manual</Label>
-            <Select value={category} onValueChange={setCategory}>
+            <Select value={category} onValueChange={handleCategoryChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
