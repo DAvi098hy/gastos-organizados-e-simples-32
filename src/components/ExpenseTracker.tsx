@@ -8,19 +8,29 @@ const ExpenseTracker = () => {
   const [despesas, setDespesas] = useState<{ descricao: string; valor: string }[]>([]);
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
-  // Carregar despesas do localStorage
+  // Garante que o código roda só no cliente (browser)
   useEffect(() => {
-    const salvas = localStorage.getItem("despesas");
-    if (salvas) {
-      setDespesas(JSON.parse(salvas));
-    }
+    setIsClient(true);
   }, []);
 
-  // Salvar despesas no localStorage sempre que mudar
+  // Carrega localStorage quando estiver no cliente
   useEffect(() => {
-    localStorage.setItem("despesas", JSON.stringify(despesas));
-  }, [despesas]);
+    if (isClient) {
+      const salvas = localStorage.getItem("despesas");
+      if (salvas) {
+        setDespesas(JSON.parse(salvas));
+      }
+    }
+  }, [isClient]);
+
+  // Salva sempre que mudar
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem("despesas", JSON.stringify(despesas));
+    }
+  }, [despesas, isClient]);
 
   const adicionarDespesa = () => {
     if (descricao.trim() && valor.trim()) {
