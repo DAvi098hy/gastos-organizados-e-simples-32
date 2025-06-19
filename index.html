@@ -1,24 +1,70 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>gastos-organizados-e-simples</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Gastos Financeiro - Organizador de Despesas</title>
+    <meta name="description" content="Categorize e organize suas despesas automaticamente com inteligência artificial" />
+    <meta name="author" content="Gastos Financeiro" />
 
-    <meta property="og:title" content="gastos-organizados-e-simples" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="background-color" content="#ffffff" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Gastos Financeiro" />
+    
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Gastos Financeiro" />
+    <link rel="apple-touch-icon" href="/lovable-uploads/c03fd6d9-965a-4b3d-b74b-68a5fb219662.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/lovable-uploads/c03fd6d9-965a-4b3d-b74b-68a5fb219662.png" type="image/png" />
+    <link rel="shortcut icon" href="/lovable-uploads/c03fd6d9-965a-4b3d-b74b-68a5fb219662.png" />
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileImage" content="/lovable-uploads/c03fd6d9-965a-4b3d-b74b-68a5fb219662.png" />
+    <meta name="msapplication-TileColor" content="#2563eb" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Gastos Financeiro - Organizador de Despesas" />
+    <meta property="og:description" content="Categorize e organize suas despesas automaticamente com inteligência artificial" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:image" content="/lovable-uploads/c03fd6d9-965a-4b3d-b74b-68a5fb219662.png" />
+    <meta property="og:url" content="https://c719364f-f06e-450a-b22f-588da355fcbe.lovableproject.com" />
 
+    <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:title" content="Gastos Financeiro" />
+    <meta name="twitter:description" content="Categorize e organize suas despesas automaticamente com inteligência artificial" />
+    <meta name="twitter:image" content="/lovable-uploads/c03fd6d9-965a-4b3d-b74b-68a5fb219662.png" />
+
+    <!-- Security -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Register Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
