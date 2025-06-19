@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'; // Adicionado useEffect
+
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, PlusCircle, Table, BarChart3 } from 'lucide-react';
+import { Calculator, PlusCircle, Table, BarChart3, Wallet } from 'lucide-react';
 import TransactionForm from './TransactionForm';
 import TransactionTable from './TransactionTable';
 import BudgetManager from './BudgetManager';
@@ -93,126 +94,151 @@ const ExpenseTracker = () => {
   const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-3">
-          <Calculator className="text-blue-600" />
-          Organizador Financeiro
-        </h1>
-        <p className="text-lg text-gray-600">
-          Categorize e organize suas despesas automaticamente
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Header modernizado */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-lg mb-6">
+            <Wallet className="text-white h-8 w-8" />
+          </div>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">
+            Organizador Financeiro
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Categorize e organize suas despesas automaticamente com inteligência artificial
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-100 text-sm">Total de Transações</p>
-                <p className="text-2xl font-bold">{transactions.length}</p>
+        {/* Cards de estatísticas modernizados */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-100 text-sm font-medium">Total de Transações</p>
+                  <p className="text-3xl font-bold mt-2">{transactions.length}</p>
+                  <p className="text-blue-200 text-xs mt-1">registradas</p>
+                </div>
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <Table className="h-6 w-6 text-blue-100" />
+                </div>
               </div>
-              <Table className="h-8 w-8 text-blue-200" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-100 text-sm">Valor Total</p>
-                <p className="text-2xl font-bold">R$ {formatCurrency(totalAmount)}</p>
-              </div>
-              <Calculator className="h-8 w-8 text-green-200" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-100 text-sm">Categorias Ativas</p>
-                <p className="text-2xl font-bold">{new Set(transactions.map(t => t.category)).size}</p>
-              </div>
-              <PlusCircle className="h-8 w-8 text-purple-200" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <BudgetManager
-          monthlyBudget={monthlyBudget}
-          dailyBudget={dailyBudget}
-          onUpdateBudgets={updateBudgets}
-        />
-      </div>
-
-      <div className="mb-8">
-        <BudgetSummary
-          transactions={transactions}
-          monthlyBudget={monthlyBudget}
-          dailyBudget={dailyBudget}
-        />
-      </div>
-
-      <Tabs defaultValue="add" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-6">
-          <TabsTrigger value="add" className="flex items-center gap-2">
-            <PlusCircle className="h-4 w-4" />
-            Adicionar Transação
-          </TabsTrigger>
-          <TabsTrigger value="view" className="flex items-center gap-2">
-            <Table className="h-4 w-4" />
-            Ver Transações
-          </TabsTrigger>
-          <TabsTrigger value="budget" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Resumo Orçamento
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="add">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">Nova Transação</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <TransactionForm onAddTransaction={addTransaction} />
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="view">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">Suas Transações</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <TransactionTable 
-                transactions={transactions} 
-                onRemoveTransaction={removeTransaction}
-                onEditTransaction={editTransaction}
-              />
+          <Card className="bg-gradient-to-br from-emerald-500 to-green-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-100 text-sm font-medium">Valor Total</p>
+                  <p className="text-3xl font-bold mt-2">R$ {formatCurrency(totalAmount)}</p>
+                  <p className="text-green-200 text-xs mt-1">em gastos</p>
+                </div>
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <Calculator className="h-6 w-6 text-green-100" />
+                </div>
+              </div>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="budget">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">Resumo do Orçamento</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BudgetSummary
-                transactions={transactions}
-                monthlyBudget={monthlyBudget}
-                dailyBudget={dailyBudget}
-              />
+          <Card className="bg-gradient-to-br from-purple-500 to-violet-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-purple-100 text-sm font-medium">Categorias Ativas</p>
+                  <p className="text-3xl font-bold mt-2">{new Set(transactions.map(t => t.category)).size}</p>
+                  <p className="text-purple-200 text-xs mt-1">diferentes</p>
+                </div>
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <PlusCircle className="h-6 w-6 text-purple-100" />
+                </div>
+              </div>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+
+          <BudgetManager
+            monthlyBudget={monthlyBudget}
+            dailyBudget={dailyBudget}
+            onUpdateBudgets={updateBudgets}
+          />
+        </div>
+
+        {/* Resumo do orçamento */}
+        <div className="mb-10">
+          <BudgetSummary
+            transactions={transactions}
+            monthlyBudget={monthlyBudget}
+            dailyBudget={dailyBudget}
+          />
+        </div>
+
+        {/* Tabs modernizadas */}
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+          <Tabs defaultValue="add" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-gray-50 p-2 rounded-none border-b border-gray-100">
+              <TabsTrigger 
+                value="add" 
+                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-xl font-medium"
+              >
+                <PlusCircle className="h-4 w-4" />
+                Adicionar Transação
+              </TabsTrigger>
+              <TabsTrigger 
+                value="view" 
+                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-xl font-medium"
+              >
+                <Table className="h-4 w-4" />
+                Ver Transações
+              </TabsTrigger>
+              <TabsTrigger 
+                value="budget" 
+                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-xl font-medium"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Resumo Orçamento
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="add" className="p-0">
+              <div className="p-8">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Nova Transação</h2>
+                  <p className="text-gray-600">Adicione uma nova despesa ao seu controle financeiro</p>
+                </div>
+                <TransactionForm onAddTransaction={addTransaction} />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="view" className="p-0">
+              <div className="p-8">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Suas Transações</h2>
+                  <p className="text-gray-600">Visualize e gerencie todas as suas despesas registradas</p>
+                </div>
+                <TransactionTable 
+                  transactions={transactions} 
+                  onRemoveTransaction={removeTransaction}
+                  onEditTransaction={editTransaction}
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="budget" className="p-0">
+              <div className="p-8">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Resumo do Orçamento</h2>
+                  <p className="text-gray-600">Acompanhe seu progresso financeiro mensal e diário</p>
+                </div>
+                <BudgetSummary
+                  transactions={transactions}
+                  monthlyBudget={monthlyBudget}
+                  dailyBudget={dailyBudget}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 };

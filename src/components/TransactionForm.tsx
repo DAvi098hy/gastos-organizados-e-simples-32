@@ -15,7 +15,16 @@ interface TransactionFormProps {
 }
 
 const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) => {
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  // Corrigir o bug da data - usar a data local sem ajuste de timezone
+  const getLocalDateString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const [date, setDate] = useState(getLocalDateString());
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<TransactionCategory | ''>('');
@@ -39,7 +48,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
 
     const newTransaction: Transaction = {
       id: Date.now().toString(),
-      date,
+      date, // A data já está no formato correto YYYY-MM-DD
       description,
       amount: parsedAmount,
       category: finalCategory as TransactionCategory
@@ -68,90 +77,103 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
   const predictedCategory = description ? categorizeTransaction(description) : null;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="date">Data *</Label>
-          <Input
-            id="date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="amount">Valor (R$) *</Label>
-          <Input
-            id="amount"
-            type="text"
-            placeholder="Ex: 25,50"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="description">Descrição *</Label>
-        <Input
-          id="description"
-          type="text"
-          placeholder="Ex: Viagem de Uber para o trabalho"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full"
-        />
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <Button
-            type="button"
-            variant={autoCategorizationEnabled ? "default" : "outline"}
-            size="sm"
-            onClick={handleAutoCategorizationToggle}
-            className="flex items-center gap-2"
-          >
-            <Sparkles className="h-4 w-4" />
-            Categorização Automática
-          </Button>
-        </div>
-
-        {autoCategorizationEnabled && predictedCategory && (
-          <Card className="p-3 bg-blue-50 border-blue-200">
-            <p className="text-sm text-blue-700">
-              <strong>Categoria sugerida:</strong> {predictedCategory}
-            </p>
-          </Card>
-        )}
-
-        {!autoCategorizationEnabled && (
-          <div className="space-y-2">
-            <Label htmlFor="category">Categoria Manual</Label>
-            <Select value={category} onValueChange={handleCategoryChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+    <div className="max-w-2xl mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <Label htmlFor="date" className="text-sm font-semibold text-gray-700">
+              Data *
+            </Label>
+            <Input
+              id="date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors"
+            />
           </div>
-        )}
-      </div>
 
-      <Button type="submit" className="w-full flex items-center gap-2">
-        <PlusCircle className="h-4 w-4" />
-        Adicionar Transação
-      </Button>
-    </form>
+          <div className="space-y-3">
+            <Label htmlFor="amount" className="text-sm font-semibold text-gray-700">
+              Valor (R$) *
+            </Label>
+            <Input
+              id="amount"
+              type="text"
+              placeholder="Ex: 25,50"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="description" className="text-sm font-semibold text-gray-700">
+            Descrição *
+          </Label>
+          <Input
+            id="description"
+            type="text"
+            placeholder="Ex: Viagem de Uber para o trabalho"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors"
+          />
+        </div>
+
+        <div className="space-y-6">
+          <div className="flex items-center space-x-3">
+            <Button
+              type="button"
+              variant={autoCategorizationEnabled ? "default" : "outline"}
+              size="sm"
+              onClick={handleAutoCategorizationToggle}
+              className="flex items-center gap-2 h-10 px-4 rounded-xl font-medium transition-all duration-200"
+            >
+              <Sparkles className="h-4 w-4" />
+              Categorização Automática
+            </Button>
+          </div>
+
+          {autoCategorizationEnabled && predictedCategory && (
+            <Card className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl">
+              <p className="text-sm text-blue-800 font-medium">
+                <strong>Categoria sugerida:</strong> {predictedCategory}
+              </p>
+            </Card>
+          )}
+
+          {!autoCategorizationEnabled && (
+            <div className="space-y-3">
+              <Label htmlFor="category" className="text-sm font-semibold text-gray-700">
+                Categoria Manual
+              </Label>
+              <Select value={category} onValueChange={handleCategoryChange}>
+                <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500">
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </div>
+
+        <Button 
+          type="submit" 
+          className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+        >
+          <PlusCircle className="h-5 w-5" />
+          Adicionar Transação
+        </Button>
+      </form>
+    </div>
   );
 };
 

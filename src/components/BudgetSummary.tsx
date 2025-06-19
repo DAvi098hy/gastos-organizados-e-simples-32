@@ -47,121 +47,137 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
     return 'text-rose-600';
   };
 
-  const getProgressColor = (percentage: number) => {
-    if (percentage < 70) return 'bg-emerald-500';
-    if (percentage < 90) return 'bg-amber-500';
-    return 'bg-rose-500';
+  const getBgGradient = (percentage: number) => {
+    if (percentage < 70) return 'from-emerald-50 to-green-50 border-emerald-200';
+    if (percentage < 90) return 'from-amber-50 to-yellow-50 border-amber-200';
+    return 'from-rose-50 to-red-50 border-rose-200';
   };
 
-  const getBgGradient = (percentage: number) => {
-    if (percentage < 70) return 'from-emerald-50 to-green-50 border-emerald-100';
-    if (percentage < 90) return 'from-amber-50 to-yellow-50 border-amber-100';
-    return 'from-rose-50 to-red-50 border-rose-100';
+  const getProgressGradient = (percentage: number) => {
+    if (percentage < 70) return 'bg-gradient-to-r from-emerald-400 to-green-500';
+    if (percentage < 90) return 'bg-gradient-to-r from-amber-400 to-orange-500';
+    return 'bg-gradient-to-r from-rose-400 to-red-500';
   };
 
   return (
     <div className="space-y-8">
-      {/* Cards de Orçamento */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className={`bg-gradient-to-br ${getBgGradient(monthlyPercentage)} shadow-lg hover:shadow-xl transition-all duration-300`}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
-              {monthlyPercentage < 100 ? (
-                <Calendar className="h-5 w-5 text-emerald-600" />
-              ) : (
-                <AlertTriangle className="h-5 w-5 text-rose-600" />
-              )}
-              <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                Orçamento Mensal
+      {/* Cards de Salário Modernizados */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className={`bg-gradient-to-br ${getBgGradient(monthlyPercentage)} shadow-xl hover:shadow-2xl transition-all duration-300 border-2 overflow-hidden`}>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl flex items-center gap-3">
+              <div className={`p-3 rounded-xl ${monthlyPercentage < 100 ? 'bg-emerald-100' : 'bg-rose-100'}`}>
+                {monthlyPercentage < 100 ? (
+                  <Calendar className="h-6 w-6 text-emerald-600" />
+                ) : (
+                  <AlertTriangle className="h-6 w-6 text-rose-600" />
+                )}
+              </div>
+              <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent font-bold">
+                Salário Mensal
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-600">Gasto Total</span>
-              <span className="font-bold text-xl text-gray-900">R$ {formatCurrency(monthlyExpenses)}</span>
+              <span className="text-sm font-semibold text-gray-600">Gasto Total</span>
+              <span className="font-bold text-2xl text-gray-900">R$ {formatCurrency(monthlyExpenses)}</span>
             </div>
             
-            <div className="space-y-2">
-              <Progress 
-                value={Math.min(monthlyPercentage, 100)} 
-                className="h-3 bg-gray-200"
-              />
-              <div className="flex justify-between text-xs text-gray-500">
+            <div className="space-y-3">
+              <div className="relative">
+                <Progress 
+                  value={Math.min(monthlyPercentage, 100)} 
+                  className="h-4 bg-gray-200 rounded-full overflow-hidden"
+                />
+                <div 
+                  className={`absolute top-0 left-0 h-4 rounded-full ${getProgressGradient(monthlyPercentage)} transition-all duration-500`}
+                  style={{ width: `${Math.min(monthlyPercentage, 100)}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 font-medium">
                 <span>0%</span>
-                <span className="font-medium">{monthlyPercentage.toFixed(1)}%</span>
+                <span className="font-bold">{monthlyPercentage.toFixed(1)}%</span>
                 <span>100%</span>
               </div>
             </div>
             
-            <div className="pt-2 flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-600">Restante</span>
-              <span className={`font-bold text-xl ${getStatusColor(monthlyPercentage)}`}>
+            <div className="pt-3 flex justify-between items-center border-t border-gray-200">
+              <span className="text-sm font-semibold text-gray-600">Restante</span>
+              <span className={`font-bold text-2xl ${getStatusColor(monthlyPercentage)}`}>
                 R$ {formatCurrency(monthlyRemaining)}
               </span>
             </div>
             
-            <div className="text-center pt-2">
-              <span className={`text-sm font-semibold px-3 py-1 rounded-full ${
+            <div className="text-center pt-3">
+              <span className={`text-sm font-bold px-4 py-2 rounded-full ${
                 monthlyPercentage < 70 
-                  ? 'bg-emerald-100 text-emerald-700' 
+                  ? 'bg-emerald-100 text-emerald-800' 
                   : monthlyPercentage < 90 
-                    ? 'bg-amber-100 text-amber-700' 
-                    : 'bg-rose-100 text-rose-700'
+                    ? 'bg-amber-100 text-amber-800' 
+                    : 'bg-rose-100 text-rose-800'
               }`}>
-                {monthlyPercentage.toFixed(1)}% utilizado
+                {monthlyPercentage.toFixed(1)}% do salário utilizado
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className={`bg-gradient-to-br ${getBgGradient(dailyPercentage)} shadow-lg hover:shadow-xl transition-all duration-300`}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
-              {dailyPercentage < 100 ? (
-                <DollarSign className="h-5 w-5 text-emerald-600" />
-              ) : (
-                <AlertTriangle className="h-5 w-5 text-rose-600" />
-              )}
-              <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+        <Card className={`bg-gradient-to-br ${getBgGradient(dailyPercentage)} shadow-xl hover:shadow-2xl transition-all duration-300 border-2 overflow-hidden`}>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl flex items-center gap-3">
+              <div className={`p-3 rounded-xl ${dailyPercentage < 100 ? 'bg-emerald-100' : 'bg-rose-100'}`}>
+                {dailyPercentage < 100 ? (
+                  <DollarSign className="h-6 w-6 text-emerald-600" />
+                ) : (
+                  <AlertTriangle className="h-6 w-6 text-rose-600" />
+                )}
+              </div>
+              <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent font-bold">
                 Orçamento Diário
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-600">Gasto Hoje</span>
-              <span className="font-bold text-xl text-gray-900">R$ {formatCurrency(dailyExpenses)}</span>
+              <span className="text-sm font-semibold text-gray-600">Gasto Hoje</span>
+              <span className="font-bold text-2xl text-gray-900">R$ {formatCurrency(dailyExpenses)}</span>
             </div>
             
-            <div className="space-y-2">
-              <Progress 
-                value={Math.min(dailyPercentage, 100)} 
-                className="h-3 bg-gray-200"
-              />
-              <div className="flex justify-between text-xs text-gray-500">
+            <div className="space-y-3">
+              <div className="relative">
+                <Progress 
+                  value={Math.min(dailyPercentage, 100)} 
+                  className="h-4 bg-gray-200 rounded-full overflow-hidden"
+                />
+                <div 
+                  className={`absolute top-0 left-0 h-4 rounded-full ${getProgressGradient(dailyPercentage)} transition-all duration-500`}
+                  style={{ width: `${Math.min(dailyPercentage, 100)}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 font-medium">
                 <span>0%</span>
-                <span className="font-medium">{dailyPercentage.toFixed(1)}%</span>
+                <span className="font-bold">{dailyPercentage.toFixed(1)}%</span>
                 <span>100%</span>
               </div>
             </div>
             
-            <div className="pt-2 flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-600">Restante Hoje</span>
-              <span className={`font-bold text-xl ${getStatusColor(dailyPercentage)}`}>
+            <div className="pt-3 flex justify-between items-center border-t border-gray-200">
+              <span className="text-sm font-semibold text-gray-600">Restante Hoje</span>
+              <span className={`font-bold text-2xl ${getStatusColor(dailyPercentage)}`}>
                 R$ {formatCurrency(dailyRemaining)}
               </span>
             </div>
             
-            <div className="text-center pt-2">
-              <span className={`text-sm font-semibold px-3 py-1 rounded-full ${
+            <div className="text-center pt-3">
+              <span className={`text-sm font-bold px-4 py-2 rounded-full ${
                 dailyPercentage < 70 
-                  ? 'bg-emerald-100 text-emerald-700' 
+                  ? 'bg-emerald-100 text-emerald-800' 
                   : dailyPercentage < 90 
-                    ? 'bg-amber-100 text-amber-700' 
-                    : 'bg-rose-100 text-rose-700'
+                    ? 'bg-amber-100 text-amber-800' 
+                    : 'bg-rose-100 text-rose-800'
               }`}>
-                {dailyPercentage.toFixed(1)}% utilizado
+                {dailyPercentage.toFixed(1)}% do orçamento diário utilizado
               </span>
             </div>
           </CardContent>
@@ -169,7 +185,7 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
       </div>
 
       {/* Gráficos de Categoria */}
-      <div className="mt-8">
+      <div className="mt-10">
         <CategoryChart transactions={transactions} />
       </div>
     </div>
