@@ -4,9 +4,21 @@ import Header from './Header';
 import StatsCards from './StatsCards';
 import MainTabs from './MainTabs';
 import BudgetSummary from './BudgetSummary';
+import SpendingTrends from './SpendingTrends';
 import { Transaction } from '@/types/transaction';
 
 const ExpenseTracker = () => {
+  // Estado para o tema dark
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      const savedTheme = localStorage.getItem('darkMode');
+      return savedTheme ? JSON.parse(savedTheme) : false;
+    } catch (error) {
+      console.error("Failed to parse theme from localStorage", error);
+      return false;
+    }
+  });
+
   // Inicializa o estado das transações com dados do localStorage, se existirem
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     try {
@@ -39,6 +51,20 @@ const ExpenseTracker = () => {
       return 100;
     }
   });
+
+  // useEffect para aplicar o tema dark
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+    } catch (error) {
+      console.error("Failed to save theme to localStorage", error);
+    }
+  }, [isDarkMode]);
 
   // useEffect para salvar transações no localStorage sempre que 'transactions' mudar
   useEffect(() => {
@@ -87,9 +113,9 @@ const ExpenseTracker = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <Header />
+        <Header isDarkMode={isDarkMode} onToggleTheme={() => setIsDarkMode(!isDarkMode)} />
 
         <StatsCards
           transactions={transactions}
@@ -97,6 +123,15 @@ const ExpenseTracker = () => {
           dailyBudget={dailyBudget}
           onUpdateBudgets={updateBudgets}
         />
+
+        {/* Nova funcionalidade: Análise de Tendências */}
+        <div className="mb-10">
+          <SpendingTrends
+            transactions={transactions}
+            monthlyBudget={monthlyBudget}
+            dailyBudget={dailyBudget}
+          />
+        </div>
 
         {/* Resumo do orçamento */}
         <div className="mb-10">

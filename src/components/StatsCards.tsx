@@ -23,7 +23,7 @@ const StatsCards: React.FC<StatsCardsProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-      <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+      <Card className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -38,7 +38,7 @@ const StatsCards: React.FC<StatsCardsProps> = ({
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-emerald-500 to-green-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+      <Card className="bg-gradient-to-br from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-green-700 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -53,7 +53,7 @@ const StatsCards: React.FC<StatsCardsProps> = ({
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-purple-500 to-violet-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+      <Card className="bg-gradient-to-br from-purple-500 to-violet-600 dark:from-purple-600 dark:to-violet-700 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
