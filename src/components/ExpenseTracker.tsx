@@ -6,6 +6,8 @@ import MainTabs from './MainTabs';
 import BudgetSummary from './BudgetSummary';
 import SpendingTrends from './SpendingTrends';
 import { Transaction } from '@/types/transaction';
+import { SavingsGoal } from '@/types/goals';
+import { Notification, NotificationSettings } from '@/types/notifications';
 
 const ExpenseTracker = () => {
   // Estado para o tema dark
@@ -52,6 +54,51 @@ const ExpenseTracker = () => {
     }
   });
 
+  // Estado para metas de economia
+  const [goals, setGoals] = useState<SavingsGoal[]>(() => {
+    try {
+      const storedGoals = localStorage.getItem('savingsGoals');
+      return storedGoals ? JSON.parse(storedGoals) : [];
+    } catch (error) {
+      console.error("Failed to parse goals from localStorage", error);
+      return [];
+    }
+  });
+
+  // Estado para notificações
+  const [notifications, setNotifications] = useState<Notification[]>(() => {
+    try {
+      const storedNotifications = localStorage.getItem('notifications');
+      return storedNotifications ? JSON.parse(storedNotifications) : [];
+    } catch (error) {
+      console.error("Failed to parse notifications from localStorage", error);
+      return [];
+    }
+  });
+
+  // Estado para configurações de notificações
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>(() => {
+    try {
+      const storedSettings = localStorage.getItem('notificationSettings');
+      return storedSettings ? JSON.parse(storedSettings) : {
+        budgetAlerts: true,
+        goalReminders: true,
+        weeklyReports: true,
+        monthlyReports: true,
+        expenseThreshold: 200,
+      };
+    } catch (error) {
+      console.error("Failed to parse notification settings from localStorage", error);
+      return {
+        budgetAlerts: true,
+        goalReminders: true,
+        weeklyReports: true,
+        monthlyReports: true,
+        expenseThreshold: 200,
+      };
+    }
+  });
+
   // useEffect para aplicar o tema dark
   useEffect(() => {
     if (isDarkMode) {
@@ -93,6 +140,33 @@ const ExpenseTracker = () => {
     }
   }, [dailyBudget]);
 
+  // useEffect para salvar metas no localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('savingsGoals', JSON.stringify(goals));
+    } catch (error) {
+      console.error("Failed to save goals to localStorage", error);
+    }
+  }, [goals]);
+
+  // useEffect para salvar notificações no localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+    } catch (error) {
+      console.error("Failed to save notifications to localStorage", error);
+    }
+  }, [notifications]);
+
+  // useEffect para salvar configurações de notificações no localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('notificationSettings', JSON.stringify(notificationSettings));
+    } catch (error) {
+      console.error("Failed to save notification settings to localStorage", error);
+    }
+  }, [notificationSettings]);
+
   const addTransaction = (transaction: Transaction) => {
     setTransactions(prev => [...prev, transaction]);
   };
@@ -110,6 +184,44 @@ const ExpenseTracker = () => {
   const updateBudgets = (monthly: number, daily: number) => {
     setMonthlyBudget(monthly);
     setDailyBudget(daily);
+  };
+
+  const addGoal = (goal: SavingsGoal) => {
+    setGoals(prev => [...prev, goal]);
+  };
+
+  const removeGoal = (id: string) => {
+    setGoals(prev => prev.filter(g => g.id !== id));
+  };
+
+  const updateGoal = (updatedGoal: SavingsGoal) => {
+    setGoals(prev => 
+      prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
+    );
+  };
+
+  const updateNotificationSettings = (settings: NotificationSettings) => {
+    setNotificationSettings(settings);
+  };
+
+  const markNotificationAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(n => n.id === id ? { ...n, isRead: true } : n)
+    );
+  };
+
+  const deleteNotification = (id: string) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const restoreData = (
+    restoredTransactions: Transaction[],
+    restoredMonthlyBudget: number,
+    restoredDailyBudget: number
+  ) => {
+    setTransactions(restoredTransactions);
+    setMonthlyBudget(restoredMonthlyBudget);
+    setDailyBudget(restoredDailyBudget);
   };
 
   return (
@@ -146,9 +258,19 @@ const ExpenseTracker = () => {
           transactions={transactions}
           monthlyBudget={monthlyBudget}
           dailyBudget={dailyBudget}
+          goals={goals}
+          notifications={notifications}
+          notificationSettings={notificationSettings}
           onAddTransaction={addTransaction}
           onRemoveTransaction={removeTransaction}
           onEditTransaction={editTransaction}
+          onAddGoal={addGoal}
+          onRemoveGoal={removeGoal}
+          onUpdateGoal={updateGoal}
+          onUpdateNotificationSettings={updateNotificationSettings}
+          onMarkNotificationAsRead={markNotificationAsRead}
+          onDeleteNotification={deleteNotification}
+          onRestoreData={restoreData}
         />
       </div>
     </div>
