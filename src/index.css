@@ -1,13 +1,15 @@
-
+/* ================================================================== */
+/* PARTE 1: Importações Base do Tailwind CSS                          */
+/* ================================================================== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Design System - Clean & Elegant */
-
+/* ================================================================== */
+/* PARTE 2: Definições Base (Cores, Fontes, etc.)                     */
+/* ================================================================== */
 @layer base {
   :root {
-    /* Enhanced color palette with better contrast */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -28,16 +30,6 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.75rem;
-
-    /* Enhanced sidebar colors */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 221.2 83.2% 53.3%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 221.2 83.2% 53.3%;
   }
 
   .dark {
@@ -60,15 +52,6 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 221.2 83.2% 53.3%;
-
-    --sidebar-background: 222.2 84% 4.9%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 221.2 83.2% 53.3%;
-    --sidebar-primary-foreground: 222.2 84% 4.9%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 221.2 83.2% 53.3%;
   }
 }
 
@@ -76,181 +59,52 @@
   * {
     @apply border-border transition-colors duration-200;
   }
-
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
-
-  /* Enhanced typography hierarchy */
-  h1 { @apply text-4xl font-bold tracking-tight; }
-  h2 { @apply text-3xl font-semibold tracking-tight; }
-  h3 { @apply text-2xl font-semibold tracking-tight; }
-  h4 { @apply text-xl font-medium tracking-tight; }
-  h5 { @apply text-lg font-medium; }
-  h6 { @apply text-base font-medium; }
+  h1,h2,h3,h4,h5,h6 {
+    @apply font-semibold tracking-tight;
+  }
 }
 
-/* Modern glassmorphism and blur effects */
+/* ================================================================== */
+/* PARTE 3: Componentes e Utilitários Customizados                    */
+/* ================================================================== */
 @layer utilities {
-  .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-white/20;
-  }
-  
-  .glass-dark {
-    @apply bg-slate-900/80 backdrop-blur-xl border border-slate-700/30;
-  }
+  .card-glass { @apply bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-slate-700/20; }
+  .shadow-elegant-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+  .dark .shadow-elegant-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3); }
+  .btn-primary { @apply bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white font-medium rounded-lg shadow-elegant transition-all duration-200 hover:shadow-elegant-lg; }
+  .focus-ring { @apply focus:outline-none focus:ring-2 focus:ring-primary/40; }
+  .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
 
-  .card-glass {
-    @apply bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/20 dark:border-slate-700/20;
+  /* BENTO GRID */
+  .bento-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
   }
-
-  .nav-glass {
-    @apply bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border border-white/10 dark:border-slate-700/10;
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-areas:
+        "add    add"
+        "recent recent"
+        "total  last";
+    }
   }
-
-  /* Elegant shadows with multiple layers */
-  .shadow-elegant {
-    box-shadow: 
-      0 1px 3px 0 rgb(0 0 0 / 0.1),
-      0 1px 2px -1px rgb(0 0 0 / 0.1);
+  @media (min-width: 1024px) {
+    .bento-grid {
+      grid-template-areas:
+        "add    add    total"
+        "add    add    last"
+        "recent recent .";
+    }
   }
-
-  .shadow-elegant-lg {
-    box-shadow: 
-      0 10px 15px -3px rgb(0 0 0 / 0.1),
-      0 4px 6px -4px rgb(0 0 0 / 0.1),
-      0 0 0 1px rgb(0 0 0 / 0.05);
-  }
-
-  .shadow-elegant-xl {
-    box-shadow: 
-      0 20px 25px -5px rgb(0 0 0 / 0.1),
-      0 8px 10px -6px rgb(0 0 0 / 0.1),
-      0 0 0 1px rgb(0 0 0 / 0.05);
-  }
-
-  /* Modern button styles */
-  .btn-primary {
-    @apply bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white font-medium rounded-xl shadow-elegant transition-all duration-200 hover:shadow-elegant-lg;
-  }
-
-  .btn-secondary {
-    @apply bg-white/80 hover:bg-white text-slate-700 font-medium rounded-xl border border-slate-200/50 shadow-elegant transition-all duration-200 hover:shadow-elegant-lg;
-  }
-
-  /* Smooth animations */
-  .animate-fadeIn {
-    animation: fadeIn 0.5s ease-out;
-  }
-
-  .animate-slideUp {
-    animation: slideUp 0.3s ease-out;
-  }
-
-  .animate-scaleIn {
-    animation: scaleIn 0.2s ease-out;
-  }
-
-  /* Focus states with modern ring */
-  .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500;
-  }
-
-  /* Improved spacing system */
-  .space-elegant > * + * {
-    @apply mt-6;
-  }
-
-  .space-compact > * + * {
-    @apply mt-4;
-  }
-
-  /* Better mobile experience */
-  .mobile-optimized {
-    @apply touch-manipulation select-none;
-  }
-
-  /* Clean separator lines */
-  .divider {
-    @apply border-t border-slate-200/60 dark:border-slate-700/60;
-  }
+  #add-expense-card { grid-area: add; }
+  #recent-expenses-card { grid-area: recent; }
+  #total-spent-card { grid-area: total; }
+  #last-expense-card { grid-area: last; }
 }
 
-/* Enhanced animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Dark mode enhancements */
-.dark {
-  color-scheme: dark;
-}
-
-.dark .shadow-elegant {
-  box-shadow: 
-    0 1px 3px 0 rgb(0 0 0 / 0.3),
-    0 1px 2px -1px rgb(0 0 0 / 0.3);
-}
-
-.dark .shadow-elegant-lg {
-  box-shadow: 
-    0 10px 15px -3px rgb(0 0 0 / 0.3),
-    0 4px 6px -4px rgb(0 0 0 / 0.3),
-    0 0 0 1px rgb(255 255 255 / 0.05);
-}
-
-.dark .shadow-elegant-xl {
-  box-shadow: 
-    0 20px 25px -5px rgb(0 0 0 / 0.3),
-    0 8px 10px -6px rgb(0 0 0 / 0.3),
-    0 0 0 1px rgb(255 255 255 / 0.05);
-}
-
-/* Remove default focus outlines for custom styling */
-button:focus,
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-}
-
-/* Improved scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-slate-300/50 hover:bg-slate-300/70 rounded-full;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  @apply bg-slate-600/50 hover:bg-slate-600/70;
-}
-
-/* Performance optimizations */
-* {
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
-
-.gpu-accelerated {
-  transform: translateZ(0);
-  will-change: transform;
-}
+/* ================================================================== */
+/* PARTE 4: Animações e Outras Regras Globais                         */
+/* ================================================================== */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
