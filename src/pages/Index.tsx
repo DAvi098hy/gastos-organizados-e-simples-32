@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import Header from '@/components/Header';
@@ -205,7 +206,7 @@ const Index = () => {
         return <QuickTransactionForm onAddTransaction={handleAddTransaction} />;
       case 'view':
         return (
-          <div className="space-y-6">
+          <div className="space-elegant">
             <MainTabs
               transactions={transactions}
               monthlyBudget={monthlyBudget}
@@ -228,7 +229,7 @@ const Index = () => {
         );
       case 'budget':
         return (
-          <div className="space-y-6">
+          <div className="space-elegant">
             <StatsCards
               transactions={transactions}
               monthlyBudget={monthlyBudget}
@@ -361,14 +362,15 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 transition-all duration-700">
-      {/* Elementos de fundo mais sutis */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-cyan-400/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-violet-50/30 dark:from-slate-950 dark:via-blue-950/20 dark:to-violet-950/20 transition-all duration-700">
+      {/* Enhanced background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/5 via-violet-400/5 to-purple-400/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-emerald-400/5 via-teal-400/5 to-cyan-400/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-pink-400/3 via-rose-400/3 to-red-400/3 rounded-full blur-3xl animate-pulse delay-2000"></div>
       </div>
       
-      <div className="relative z-10 container mx-auto px-4 py-6 max-w-6xl">
+      <div className="relative z-10 container mx-auto px-6 py-8 max-w-7xl">
         <Header 
           isDarkMode={isDarkMode} 
           onToggleTheme={toggleTheme}
@@ -376,17 +378,16 @@ const Index = () => {
           onQuickStats={() => setActiveTab('budget')}
         />
         
-        {/* Navegação prática */}
         <QuickNav
           activeTab={activeTab}
           onTabChange={setActiveTab}
           unreadNotifications={unreadNotifications}
         />
 
-        {/* Gráfico de tendências mais compacto */}
+        {/* Enhanced trends section */}
         {activeTab !== 'add' && (
-          <div className="mb-6">
-            <div className="bg-white/60 dark:bg-slate-800/60 rounded-2xl shadow-lg border border-white/30 dark:border-slate-700/30 p-4">
+          <div className="mb-8 animate-fadeIn">
+            <div className="card-glass rounded-3xl shadow-elegant-lg border p-6">
               <SpendingTrends
                 transactions={transactions}
                 monthlyBudget={monthlyBudget}
@@ -396,8 +397,8 @@ const Index = () => {
           </div>
         )}
 
-        {/* Conteúdo principal */}
-        <div className="bg-white/70 dark:bg-slate-800/70 rounded-2xl shadow-xl border border-white/30 dark:border-slate-700/30 p-6">
+        {/* Main content with enhanced styling */}
+        <div className="card-glass rounded-3xl shadow-elegant-xl border p-8 animate-slideUp">
           {renderActiveTab()}
         </div>
 
