@@ -1,7 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import Header from '@/components/Header';
+import QuickNav from '@/components/QuickNav';
+import QuickTransactionForm from '@/components/QuickTransactionForm';
 import StatsCards from '@/components/StatsCards';
 import MainTabs from '@/components/MainTabs';
 import BudgetSummary from '@/components/BudgetSummary';
@@ -54,6 +55,9 @@ const Index = () => {
       expenseThreshold: 200,
     };
   });
+
+  const [activeTab, setActiveTab] = useState('add');
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   const { registerServiceWorker, isInstalled } = usePWA();
 
@@ -125,7 +129,6 @@ const Index = () => {
       const currentMonth = today.getMonth();
       const currentYear = today.getFullYear();
 
-      // Verificar orçamento mensal
       const monthlyExpenses = transactions
         .filter(t => {
           const transactionDate = new Date(t.date);
@@ -154,7 +157,6 @@ const Index = () => {
         }
       }
 
-      // Verificar metas próximas do prazo
       if (notificationSettings.goalReminders) {
         goals.forEach(goal => {
           if (!goal.isCompleted) {
@@ -189,11 +191,103 @@ const Index = () => {
       }
     };
 
-    const interval = setInterval(generateSmartNotifications, 300000); // A cada 5 minutos
-    generateSmartNotifications(); // Executar imediatamente
+    const interval = setInterval(generateSmartNotifications, 300000);
+    generateSmartNotifications();
 
     return () => clearInterval(interval);
   }, [transactions, goals, notificationSettings, monthlyBudget, notifications]);
+
+  const unreadNotifications = notifications.filter(n => !n.isRead).length;
+
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case 'add':
+        return <QuickTransactionForm onAddTransaction={handleAddTransaction} />;
+      case 'view':
+        return (
+          <div className="space-y-6">
+            <MainTabs
+              transactions={transactions}
+              monthlyBudget={monthlyBudget}
+              dailyBudget={dailyBudget}
+              goals={goals}
+              notifications={notifications}
+              notificationSettings={notificationSettings}
+              onAddTransaction={handleAddTransaction}
+              onRemoveTransaction={handleRemoveTransaction}
+              onEditTransaction={handleEditTransaction}
+              onAddGoal={handleAddGoal}
+              onRemoveGoal={handleRemoveGoal}
+              onUpdateGoal={handleUpdateGoal}
+              onUpdateNotificationSettings={handleUpdateNotificationSettings}
+              onMarkNotificationAsRead={handleMarkNotificationAsRead}
+              onDeleteNotification={handleDeleteNotification}
+              onRestoreData={handleRestoreData}
+            />
+          </div>
+        );
+      case 'budget':
+        return (
+          <div className="space-y-6">
+            <StatsCards
+              transactions={transactions}
+              monthlyBudget={monthlyBudget}
+              dailyBudget={dailyBudget}
+              onUpdateBudgets={handleUpdateBudgets}
+            />
+            <BudgetSummary
+              transactions={transactions}
+              monthlyBudget={monthlyBudget}
+              dailyBudget={dailyBudget}
+            />
+          </div>
+        );
+      case 'goals':
+        return (
+          <MainTabs
+            transactions={transactions}
+            monthlyBudget={monthlyBudget}
+            dailyBudget={dailyBudget}
+            goals={goals}
+            notifications={notifications}
+            notificationSettings={notificationSettings}
+            onAddTransaction={handleAddTransaction}
+            onRemoveTransaction={handleRemoveTransaction}
+            onEditTransaction={handleEditTransaction}
+            onAddGoal={handleAddGoal}
+            onRemoveGoal={handleRemoveGoal}
+            onUpdateGoal={handleUpdateGoal}
+            onUpdateNotificationSettings={handleUpdateNotificationSettings}
+            onMarkNotificationAsRead={handleMarkNotificationAsRead}
+            onDeleteNotification={handleDeleteNotification}
+            onRestoreData={handleRestoreData}
+          />
+        );
+      case 'notifications':
+        return (
+          <MainTabs
+            transactions={transactions}
+            monthlyBudget={monthlyBudget}
+            dailyBudget={dailyBudget}
+            goals={goals}
+            notifications={notifications}
+            notificationSettings={notificationSettings}
+            onAddTransaction={handleAddTransaction}
+            onRemoveTransaction={handleRemoveTransaction}
+            onEditTransaction={handleEditTransaction}
+            onAddGoal={handleAddGoal}
+            onRemoveGoal={handleRemoveGoal}
+            onUpdateGoal={handleUpdateGoal}
+            onUpdateNotificationSettings={handleUpdateNotificationSettings}
+            onMarkNotificationAsRead={handleMarkNotificationAsRead}
+            onDeleteNotification={handleDeleteNotification}
+            onRestoreData={handleRestoreData}
+          />
+        );
+      default:
+        return <QuickTransactionForm onAddTransaction={handleAddTransaction} />;
+    }
+  };
 
   const handleAddTransaction = (transaction: Transaction) => {
     setTransactions(prev => [transaction, ...prev]);
@@ -268,68 +362,43 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 transition-all duration-700">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+      {/* Elementos de fundo mais sutis */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-cyan-400/10 rounded-full blur-3xl"></div>
       </div>
       
-      <div className="relative z-10 container mx-auto px-4 py-8 max-w-7xl">
-        <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
+      <div className="relative z-10 container mx-auto px-4 py-6 max-w-6xl">
+        <Header 
+          isDarkMode={isDarkMode} 
+          onToggleTheme={toggleTheme}
+          onQuickAdd={() => setActiveTab('add')}
+          onQuickStats={() => setActiveTab('budget')}
+        />
         
-        {/* Glass morphism container for stats */}
-        <div className="backdrop-blur-sm bg-white/30 dark:bg-slate-800/30 rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-6 mb-10 transition-all duration-300 hover:bg-white/40 dark:hover:bg-slate-800/40">
-          <StatsCards
-            transactions={transactions}
-            monthlyBudget={monthlyBudget}
-            dailyBudget={dailyBudget}
-            onUpdateBudgets={handleUpdateBudgets}
-          />
-        </div>
+        {/* Navegação prática */}
+        <QuickNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          unreadNotifications={unreadNotifications}
+        />
 
-        {/* Enhanced spending trends section */}
-        <div className="mb-10">
-          <div className="backdrop-blur-sm bg-gradient-to-r from-white/40 to-white/60 dark:from-slate-800/40 dark:to-slate-800/60 rounded-3xl shadow-2xl border border-white/30 dark:border-slate-700/30 p-6 transition-all duration-300 hover:shadow-3xl">
-            <SpendingTrends
-              transactions={transactions}
-              monthlyBudget={monthlyBudget}
-              dailyBudget={dailyBudget}
-            />
+        {/* Gráfico de tendências mais compacto */}
+        {activeTab !== 'add' && (
+          <div className="mb-6">
+            <div className="bg-white/60 dark:bg-slate-800/60 rounded-2xl shadow-lg border border-white/30 dark:border-slate-700/30 p-4">
+              <SpendingTrends
+                transactions={transactions}
+                monthlyBudget={monthlyBudget}
+                dailyBudget={dailyBudget}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Enhanced budget summary */}
-        <div className="mb-10">
-          <div className="backdrop-blur-sm bg-gradient-to-l from-white/40 to-white/60 dark:from-slate-800/40 dark:to-slate-800/60 rounded-3xl shadow-2xl border border-white/30 dark:border-slate-700/30 p-6 transition-all duration-300 hover:shadow-3xl">
-            <BudgetSummary
-              transactions={transactions}
-              monthlyBudget={monthlyBudget}
-              dailyBudget={dailyBudget}
-            />
-          </div>
-        </div>
-
-        {/* Enhanced main tabs with glass effect */}
-        <div className="backdrop-blur-sm bg-white/50 dark:bg-slate-800/50 rounded-3xl shadow-2xl border border-white/30 dark:border-slate-700/30 transition-all duration-300 hover:bg-white/60 dark:hover:bg-slate-800/60">
-          <MainTabs
-            transactions={transactions}
-            monthlyBudget={monthlyBudget}
-            dailyBudget={dailyBudget}
-            goals={goals}
-            notifications={notifications}
-            notificationSettings={notificationSettings}
-            onAddTransaction={handleAddTransaction}
-            onRemoveTransaction={handleRemoveTransaction}
-            onEditTransaction={handleEditTransaction}
-            onAddGoal={handleAddGoal}
-            onRemoveGoal={handleRemoveGoal}
-            onUpdateGoal={handleUpdateGoal}
-            onUpdateNotificationSettings={handleUpdateNotificationSettings}
-            onMarkNotificationAsRead={handleMarkNotificationAsRead}
-            onDeleteNotification={handleDeleteNotification}
-            onRestoreData={handleRestoreData}
-          />
+        {/* Conteúdo principal */}
+        <div className="bg-white/70 dark:bg-slate-800/70 rounded-2xl shadow-xl border border-white/30 dark:border-slate-700/30 p-6">
+          {renderActiveTab()}
         </div>
 
         <PWAInstallPrompt />
