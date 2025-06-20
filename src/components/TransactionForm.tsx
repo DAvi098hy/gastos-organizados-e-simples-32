@@ -6,8 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
 import { PlusCircle, Sparkles } from 'lucide-react';
-import { Transaction, CATEGORIES, TransactionCategory } from '@/types/transaction';
+import { Transaction } from '@/types/transaction';
 import { categorizeTransaction, parseCurrency } from '@/utils/categorizationUtils';
+import { useCategoryManager } from '@/hooks/useCategoryManager';
 import { toast } from 'sonner';
 
 interface TransactionFormProps {
@@ -15,6 +16,8 @@ interface TransactionFormProps {
 }
 
 const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) => {
+  const { categories, getCategoryNames } = useCategoryManager();
+  
   // Corrigir o bug da data - usar a data local sem ajuste de timezone
   const getLocalDateString = () => {
     const now = new Date();
@@ -27,7 +30,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
   const [date, setDate] = useState(getLocalDateString());
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState<TransactionCategory | ''>('');
+  const [category, setCategory] = useState<string>('');
   const [autoCategorizationEnabled, setAutoCategorizationEnabled] = useState(true);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,14 +47,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
       return;
     }
 
-    const finalCategory = category || (autoCategorizationEnabled ? categorizeTransaction(description) : 'Gasto Variável');
+    const finalCategory = category || (autoCategorizationEnabled ? categorizeTransaction(description, categories) : 'Gasto Variável');
 
     const newTransaction: Transaction = {
       id: Date.now().toString(),
       date, // A data já está no formato correto YYYY-MM-DD
       description,
       amount: parsedAmount,
-      category: finalCategory as TransactionCategory
+      category: finalCategory
     };
 
     onAddTransaction(newTransaction);
@@ -71,10 +74,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
   };
 
   const handleCategoryChange = (value: string) => {
-    setCategory(value as TransactionCategory);
+    setCategory(value);
   };
 
-  const predictedCategory = description ? categorizeTransaction(description) : null;
+  const predictedCategory = description ? categorizeTransaction(description, categories) : null;
+  const categoryNames = getCategoryNames();
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -154,7 +158,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransaction }) =
                   <SelectValue placeholder="Selecione uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  {CATEGORIES.map((cat) => (
+                  {categoryNames.map((cat) => (
                     <SelectItem key={cat} value={cat}>
                       {cat}
                     </SelectItem>

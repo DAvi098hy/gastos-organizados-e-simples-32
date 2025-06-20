@@ -1,45 +1,19 @@
 
-import { TransactionCategory } from "@/types/transaction";
+import { CategoryRule } from "@/types/transaction";
 
-export const categorizeTransaction = (description: string): TransactionCategory => {
+export const categorizeTransaction = (description: string, categories: CategoryRule[]): string => {
   const desc = description.toLowerCase();
   
-  // Regra 1: Uber
-  if (desc.includes("uber") || desc.includes("viagem uber") || desc.includes("entrega uber")) {
-    return "Uber";
+  // Procura pela primeira categoria que tenha uma palavra-chave correspondente
+  for (const category of categories) {
+    if (category.keywords.some(keyword => desc.includes(keyword.toLowerCase()))) {
+      return category.name;
+    }
   }
   
-  // Regra 1: Facebook
-  if (desc.includes("facebook") || desc.includes("instagram") || desc.includes("whatsapp") || 
-      desc.includes("anúncio") || desc.includes("marketplace") || desc.includes("facebook ads")) {
-    return "Facebook";
-  }
-  
-  // Regra 2: Gasto Mensal (despesas fixas/recorrentes)
-  const gastoMensalKeywords = [
-    "aluguel", "mensalidade", "conta de luz", "conta de água", "internet", 
-    "telefone", "streaming", "academia", "seguro", "parcela", "empréstimo",
-    "condomínio", "iptu", "ipva", "plano de saúde", "escola", "faculdade"
-  ];
-  
-  if (gastoMensalKeywords.some(keyword => desc.includes(keyword))) {
-    return "Gasto Mensal";
-  }
-  
-  // Regra 3: Gasto Benéfico e Pessoal
-  const gastoBeneficoPessoalKeywords = [
-    "curso", "livro", "cinema", "restaurante", "viagem", "lazer", "hobby",
-    "doação", "presente", "cabeleireiro", "salão", "spa", "massagem", 
-    "terapia", "psicólogo", "cultura", "teatro", "show", "evento",
-    "desenvolvimento pessoal", "well-being", "bem-estar"
-  ];
-  
-  if (gastoBeneficoPessoalKeywords.some(keyword => desc.includes(keyword))) {
-    return "Gasto Benéfico e Pessoal";
-  }
-  
-  // Regra 4: Gasto Variável (padrão para todo o resto)
-  return "Gasto Variável";
+  // Se não encontrar nenhuma correspondência, retorna "Gasto Variável" ou a última categoria
+  const fallbackCategory = categories.find(cat => cat.name === "Gasto Variável") || categories[categories.length - 1];
+  return fallbackCategory.name;
 };
 
 export const formatCurrency = (amount: number): string => {

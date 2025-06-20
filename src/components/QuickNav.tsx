@@ -13,12 +13,13 @@ const QuickNav: React.FC<QuickNavProps> = ({ activeTab, onTabChange, unreadNotif
   const mainTabs = [
     { id: 'add', label: 'Adicionar', icon: PlusCircle, priority: 1 },
     { id: 'view', label: 'Lista', icon: Table, priority: 2 },
-    { id: 'budget', label: 'Resumo', icon: BarChart3, priority: 3 },
+    { id: 'budget', label: '&', icon: BarChart3, priority: 3 },
     { id: 'goals', label: 'Metas', icon: Target, priority: 4 },
   ];
 
   const secondaryTabs = [
     { id: 'notifications', label: 'Alertas', icon: Bell, badge: unreadNotifications },
+    { id: 'categories', label: 'Categorias', icon: Settings },
   ];
 
   return (

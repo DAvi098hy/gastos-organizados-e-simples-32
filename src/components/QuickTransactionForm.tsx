@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
 import { PlusCircle, Zap } from 'lucide-react';
-import { Transaction, CATEGORIES, TransactionCategory } from '@/types/transaction';
+import { Transaction } from '@/types/transaction';
 import { categorizeTransaction, parseCurrency } from '@/utils/categorizationUtils';
+import { useCategoryManager } from '@/hooks/useCategoryManager';
 import { toast } from 'sonner';
 
 interface QuickTransactionFormProps {
@@ -14,6 +15,8 @@ interface QuickTransactionFormProps {
 }
 
 const QuickTransactionForm: React.FC<QuickTransactionFormProps> = ({ onAddTransaction }) => {
+  const { categories, getCategoryNames } = useCategoryManager();
+  
   const getLocalDateString = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -25,7 +28,7 @@ const QuickTransactionForm: React.FC<QuickTransactionFormProps> = ({ onAddTransa
   const [date, setDate] = useState(getLocalDateString());
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState<TransactionCategory | ''>('');
+  const [category, setCategory] = useState<string>('');
   const [isQuickMode, setIsQuickMode] = useState(true);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,14 +45,14 @@ const QuickTransactionForm: React.FC<QuickTransactionFormProps> = ({ onAddTransa
       return;
     }
 
-    const finalCategory = category || categorizeTransaction(description);
+    const finalCategory = category || categorizeTransaction(description, categories);
 
     const newTransaction: Transaction = {
       id: Date.now().toString(),
       date,
       description,
       amount: parsedAmount,
-      category: finalCategory as TransactionCategory
+      category: finalCategory
     };
 
     onAddTransaction(newTransaction);
@@ -61,7 +64,8 @@ const QuickTransactionForm: React.FC<QuickTransactionFormProps> = ({ onAddTransa
     if (!isQuickMode) setCategory('');
   };
 
-  const quickCategories = ['Alimentação', 'Transporte', 'Compras', 'Lazer'];
+  const quickCategories = categories.slice(0, 4).map(cat => cat.name);
+  const categoryNames = getCategoryNames();
 
   return (
     <Card className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-slate-800 dark:to-slate-900 border-2 border-blue-100 dark:border-blue-900">
@@ -110,7 +114,7 @@ const QuickTransactionForm: React.FC<QuickTransactionFormProps> = ({ onAddTransa
                 type="button"
                 variant={category === cat ? "default" : "outline"}
                 size="sm"
-                onClick={() => setCategory(cat as TransactionCategory)}
+                onClick={() => setCategory(cat)}
                 className="rounded-full"
               >
                 {cat}
@@ -128,12 +132,12 @@ const QuickTransactionForm: React.FC<QuickTransactionFormProps> = ({ onAddTransa
               onChange={(e) => setDate(e.target.value)}
               className="h-10 border-2 border-gray-200 focus:border-blue-500 rounded-xl"
             />
-            <Select value={category} onValueChange={(value) => setCategory(value as TransactionCategory)}>
+            <Select value={category} onValueChange={(value) => setCategory(value)}>
               <SelectTrigger className="h-10 border-2 border-gray-200 focus:border-blue-500 rounded-xl">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
-                {CATEGORIES.map((cat) => (
+                {categoryNames.map((cat) => (
                   <SelectItem key={cat} value={cat}>
                     {cat}
                   </SelectItem>
@@ -146,7 +150,7 @@ const QuickTransactionForm: React.FC<QuickTransactionFormProps> = ({ onAddTransa
         {/* Sugestão de categoria */}
         {description && !category && (
           <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950 p-2 rounded-lg">
-            💡 Sugestão: <strong>{categorizeTransaction(description)}</strong>
+            💡 Sugestão: <strong>{categorizeTransaction(description, categories)}</strong>
           </div>
         )}
 
