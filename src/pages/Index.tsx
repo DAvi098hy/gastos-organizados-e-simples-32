@@ -4,6 +4,8 @@ import { toast } from 'sonner';
 import Header from '@/components/Header';
 import StatsCards from '@/components/StatsCards';
 import MainTabs from '@/components/MainTabs';
+import BudgetSummary from '@/components/BudgetSummary';
+import SpendingTrends from '@/components/SpendingTrends';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import { Transaction } from '@/types/transaction';
 import { usePWA } from '@/hooks/usePWA';
@@ -109,6 +111,24 @@ const Index = () => {
           dailyBudget={dailyBudget}
           onUpdateBudgets={handleUpdateBudgets}
         />
+
+        {/* Análise Inteligente de Gastos */}
+        <div className="mb-10">
+          <SpendingTrends
+            transactions={transactions}
+            monthlyBudget={monthlyBudget}
+            dailyBudget={dailyBudget}
+          />
+        </div>
+
+        {/* Resumo do orçamento */}
+        <div className="mb-10">
+          <BudgetSummary
+            transactions={transactions}
+            monthlyBudget={monthlyBudget}
+            dailyBudget={dailyBudget}
+          />
+        </div>
 
         <MainTabs
           transactions={transactions}
