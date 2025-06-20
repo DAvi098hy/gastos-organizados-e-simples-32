@@ -97,7 +97,7 @@
   }
 }
 
-/* Dark theme specific styles */
+/* Enhanced dark theme specific styles */
 .dark {
   color-scheme: dark;
 }
@@ -114,8 +114,38 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
-/* Mobile optimizations */
+/* Enhanced shadow styles */
+.shadow-3xl {
+  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25), 0 10px 20px -8px rgba(0, 0, 0, 0.1);
+}
+
+.dark .shadow-3xl {
+  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.7), 0 10px 20px -8px rgba(0, 0, 0, 0.4);
+}
+
+/* Glass morphism utilities */
 @layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .glass-dark {
+    background: rgba(15, 23, 42, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Enhanced animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
   /* Hide scrollbar for horizontal scroll */
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -163,6 +193,25 @@
   }
 }
 
+/* Enhanced keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+  }
+}
+
 /* Mobile viewport fixes */
 @supports (-webkit-touch-callout: none) {
   /* iOS specific fixes */
@@ -182,4 +231,11 @@
   textarea {
     font-size: 16px !important;
   }
+}
+
+/* Enhanced transitions for better performance */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
