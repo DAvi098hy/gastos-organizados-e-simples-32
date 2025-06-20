@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PlusCircle, Table, BarChart3 } from 'lucide-react';
+import { PlusCircle, Table, BarChart3, Shield } from 'lucide-react';
 import TransactionForm from './TransactionForm';
 import TransactionTable from './TransactionTable';
 import BudgetSummary from './BudgetSummary';
+import BackupManager from './BackupManager';
 import { Transaction } from '@/types/transaction';
 
 interface MainTabsProps {
@@ -14,6 +14,11 @@ interface MainTabsProps {
   onAddTransaction: (transaction: Transaction) => void;
   onRemoveTransaction: (id: string) => void;
   onEditTransaction: (updatedTransaction: Transaction) => void;
+  onRestoreData?: (
+    transactions: Transaction[],
+    monthlyBudget: number,
+    dailyBudget: number
+  ) => void;
 }
 
 const MainTabs: React.FC<MainTabsProps> = ({
@@ -23,11 +28,12 @@ const MainTabs: React.FC<MainTabsProps> = ({
   onAddTransaction,
   onRemoveTransaction,
   onEditTransaction,
+  onRestoreData
 }) => {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden transition-colors duration-300">
       <Tabs defaultValue="add" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-gray-50 dark:bg-slate-700 p-2 rounded-none border-b border-gray-100 dark:border-slate-600">
+        <TabsList className="grid w-full grid-cols-4 bg-gray-50 dark:bg-slate-700 p-2 rounded-none border-b border-gray-100 dark:border-slate-600">
           <TabsTrigger 
             value="add" 
             className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors"
@@ -48,6 +54,13 @@ const MainTabs: React.FC<MainTabsProps> = ({
           >
             <BarChart3 className="h-4 w-4" />
             Resumo Orçamento
+          </TabsTrigger>
+          <TabsTrigger 
+            value="backup" 
+            className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors"
+          >
+            <Shield className="h-4 w-4" />
+            Backup
           </TabsTrigger>
         </TabsList>
 
@@ -86,6 +99,23 @@ const MainTabs: React.FC<MainTabsProps> = ({
               monthlyBudget={monthlyBudget}
               dailyBudget={dailyBudget}
             />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="backup" className="p-0">
+          <div className="p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Backup dos Dados</h2>
+              <p className="text-gray-600 dark:text-gray-300">Mantenha seus dados financeiros seguros com backups automáticos</p>
+            </div>
+            {onRestoreData && (
+              <BackupManager
+                transactions={transactions}
+                monthlyBudget={monthlyBudget}
+                dailyBudget={dailyBudget}
+                onRestoreData={onRestoreData}
+              />
+            )}
           </div>
         </TabsContent>
       </Tabs>

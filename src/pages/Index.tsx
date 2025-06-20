@@ -9,6 +9,7 @@ import SpendingTrends from '@/components/SpendingTrends';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import { Transaction } from '@/types/transaction';
 import { usePWA } from '@/hooks/usePWA';
+import { useAutoBackup } from '@/hooks/useAutoBackup';
 
 const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
@@ -32,6 +33,14 @@ const Index = () => {
   });
 
   const { registerServiceWorker, isInstalled } = usePWA();
+
+  // Sistema de backup automático
+  useAutoBackup({
+    transactions,
+    monthlyBudget,
+    dailyBudget,
+    enabled: true
+  });
 
   // Register Service Worker on component mount
   useEffect(() => {
@@ -96,6 +105,19 @@ const Index = () => {
     toast.success('Orçamentos atualizados!');
   };
 
+  const handleRestoreData = (
+    restoredTransactions: Transaction[],
+    restoredMonthlyBudget: number,
+    restoredDailyBudget: number
+  ) => {
+    setTransactions(restoredTransactions);
+    setMonthlyBudget(restoredMonthlyBudget);
+    setDailyBudget(restoredDailyBudget);
+    toast.success('Dados restaurados com sucesso! ♻️', {
+      description: 'Todas as informações foram recuperadas do backup'
+    });
+  };
+
   const toggleTheme = () => {
     setIsDarkMode(prev => !prev);
   };
@@ -137,6 +159,7 @@ const Index = () => {
           onAddTransaction={handleAddTransaction}
           onRemoveTransaction={handleRemoveTransaction}
           onEditTransaction={handleEditTransaction}
+          onRestoreData={handleRestoreData}
         />
 
         <PWAInstallPrompt />
