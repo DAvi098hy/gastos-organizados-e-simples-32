@@ -82,113 +82,116 @@ const MainTabs: React.FC<MainTabsProps> = ({
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden transition-colors duration-300">
       <Tabs defaultValue="add" className="w-full">
-        <TabsList className="grid w-full grid-cols-6 lg:grid-cols-12 bg-gray-50 dark:bg-slate-700 p-2 rounded-none border-b border-gray-100 dark:border-slate-600">
-          <TabsTrigger 
-            value="add" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <PlusCircle className="h-4 w-4" />
-            <span className="hidden sm:inline">Adicionar</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="view" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <Table className="h-4 w-4" />
-            <span className="hidden sm:inline">Transações</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="filters" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <Filter className="h-4 w-4" />
-            <span className="hidden sm:inline">Filtros</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="insights" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <Lightbulb className="h-4 w-4" />
-            <span className="hidden sm:inline">Insights</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="planner" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <Calendar className="h-4 w-4" />
-            <span className="hidden sm:inline">Planejador</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="import" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <Upload className="h-4 w-4" />
-            <span className="hidden sm:inline">Importar</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="goals" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <Target className="h-4 w-4" />
-            <span className="hidden sm:inline">Metas</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="reports" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">Relatórios</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="comparison" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <TrendingUp className="h-4 w-4" />
-            <span className="hidden sm:inline">Comparação</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="notifications" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs relative"
-          >
-            <Bell className="h-4 w-4" />
-            <span className="hidden sm:inline">Alertas</span>
-            {unreadNotifications > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {unreadNotifications}
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger 
-            value="budget" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Orçamento</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="backup" 
-            className="flex items-center gap-1 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-colors text-xs"
-          >
-            <Shield className="h-4 w-4" />
-            <span className="hidden sm:inline">Backup</span>
-          </TabsTrigger>
+        {/* Layout mobile-first para as tabs */}
+        <TabsList className="w-full bg-gray-50 dark:bg-slate-700 p-1 rounded-none border-b border-gray-100 dark:border-slate-600 overflow-x-auto scrollbar-hide">
+          <div className="flex min-w-max gap-1">
+            <TabsTrigger 
+              value="add" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <PlusCircle className="h-4 w-4 flex-shrink-0" />
+              <span>Adicionar</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="view" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <Table className="h-4 w-4 flex-shrink-0" />
+              <span>Transações</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="filters" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <Filter className="h-4 w-4 flex-shrink-0" />
+              <span>Filtros</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="insights" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <Lightbulb className="h-4 w-4 flex-shrink-0" />
+              <span>Insights</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="planner" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <Calendar className="h-4 w-4 flex-shrink-0" />
+              <span>Planejador</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="import" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <Upload className="h-4 w-4 flex-shrink-0" />
+              <span>Importar</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="goals" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <Target className="h-4 w-4 flex-shrink-0" />
+              <span>Metas</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="reports" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <FileText className="h-4 w-4 flex-shrink-0" />
+              <span>Relatórios</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="comparison" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <TrendingUp className="h-4 w-4 flex-shrink-0" />
+              <span>Comparação</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="notifications" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max relative"
+            >
+              <Bell className="h-4 w-4 flex-shrink-0" />
+              <span>Alertas</span>
+              {unreadNotifications > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
+                  {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="budget" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <BarChart3 className="h-4 w-4 flex-shrink-0" />
+              <span>Orçamento</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="backup" 
+              className="flex items-center gap-1.5 px-3 py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600 data-[state=active]:shadow-sm rounded-xl font-medium transition-all text-xs whitespace-nowrap min-w-max"
+            >
+              <Shield className="h-4 w-4 flex-shrink-0" />
+              <span>Backup</span>
+            </TabsTrigger>
+          </div>
         </TabsList>
 
         <TabsContent value="add" className="p-0">
-          <div className="p-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Nova Transação</h2>
-              <p className="text-gray-600 dark:text-gray-300">Adicione uma nova despesa ao seu controle financeiro</p>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Nova Transação</h2>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Adicione uma nova despesa ao seu controle financeiro</p>
             </div>
             <TransactionForm onAddTransaction={onAddTransaction} />
           </div>
         </TabsContent>
 
         <TabsContent value="view" className="p-0">
-          <div className="p-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Suas Transações</h2>
-              <p className="text-gray-600 dark:text-gray-300">Visualize e gerencie todas as suas despesas registradas</p>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Suas Transações</h2>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Visualize e gerencie todas as suas despesas registradas</p>
             </div>
             <TransactionTable 
               transactions={filteredTransactions.length > 0 ? filteredTransactions : transactions} 
@@ -199,10 +202,10 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="filters" className="p-0">
-          <div className="p-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Filtros Avançados</h2>
-              <p className="text-gray-600 dark:text-gray-300">Filtre suas transações por data, valor, categoria e mais</p>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Filtros Avançados</h2>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Filtre suas transações por data, valor, categoria e mais</p>
             </div>
             <AdvancedFilters
               transactions={transactions}
@@ -221,7 +224,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="insights" className="p-0">
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <InsightsDashboard
               transactions={transactions}
               monthlyBudget={monthlyBudget}
@@ -231,7 +234,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="planner" className="p-0">
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <ExpensePlanner
               monthlyBudget={monthlyBudget}
               currentMonthExpenses={currentMonthExpenses}
@@ -240,13 +243,13 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="import" className="p-0">
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <DataImporter onImportTransactions={handleImportTransactions} />
           </div>
         </TabsContent>
 
         <TabsContent value="goals" className="p-0">
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <SavingsGoals
               goals={goals}
               onAddGoal={onAddGoal}
@@ -257,10 +260,10 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="reports" className="p-0">
-          <div className="p-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Relatórios e Exportação</h2>
-              <p className="text-gray-600 dark:text-gray-300">Analise seus gastos e exporte relatórios detalhados</p>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Relatórios e Exportação</h2>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Analise seus gastos e exporte relatórios detalhados</p>
             </div>
             <ReportsExport
               transactions={transactions}
@@ -271,13 +274,13 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="comparison" className="p-0">
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <PeriodComparison transactions={transactions} />
           </div>
         </TabsContent>
 
         <TabsContent value="notifications" className="p-0">
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <NotificationCenter
               transactions={transactions}
               goals={goals}
@@ -293,10 +296,10 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="budget" className="p-0">
-          <div className="p-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Resumo do Orçamento</h2>
-              <p className="text-gray-600 dark:text-gray-300">Acompanhe seu progresso financeiro mensal e diário</p>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Resumo do Orçamento</h2>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Acompanhe seu progresso financeiro mensal e diário</p>
             </div>
             <BudgetSummary
               transactions={transactions}
@@ -307,10 +310,10 @@ const MainTabs: React.FC<MainTabsProps> = ({
         </TabsContent>
 
         <TabsContent value="backup" className="p-0">
-          <div className="p-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Backup dos Dados</h2>
-              <p className="text-gray-600 dark:text-gray-300">Mantenha seus dados financeiros seguros com backups automáticos</p>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Backup dos Dados</h2>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Mantenha seus dados financeiros seguros com backups automáticos</p>
             </div>
             {onRestoreData && (
               <BackupManager
